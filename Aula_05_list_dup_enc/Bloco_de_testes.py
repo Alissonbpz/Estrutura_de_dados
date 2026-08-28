@@ -1,7 +1,7 @@
 # =====================================================================
 # 3. TESTES DE VERIFICAÇÃO
 # =====================================================================
-from Aula_05_list_dup_enc.main import ListaDuplamenteEncadeada
+from main import ListaDuplamenteEncadeada
 
 
 if __name__ == "__main__":

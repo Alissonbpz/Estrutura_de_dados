@@ -40,9 +40,18 @@ class ListaDuplamenteEncadeada:
             self.cauda.proximo = novo_no
             self.cauda = novo_no
     def imprimir_frente(self):
-        print(self.cabeca.dado)
+        atual = self.cabeca
+        while atual is not None:
+            print(atual.dado,",")
+            atual = atual.proximo
+            print()
 
     def imprimir_tras(self):
-        print(self.cauda.dado)
+        atual = self.cauda
+        print("\nDe trás pra frente: \n")
+        while atual is not None:
+            print(atual.dado,", ")
+            atual = atual.anterior
+        
 
     
