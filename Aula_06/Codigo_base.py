@@ -32,11 +32,22 @@ class VetorEstatico:
 
     def remover_impares(self):
         """Remove ímpares deslocando os elementos restantes à esquerda."""
-        pass
+        if self.tamanho == 0:
+            return
+        else:
+            novo_tamanho = 0
+            for i in range(self.tamanho):
+                if self.dados[i] % 2 == 0:
+                    self.dados[novo_tamanho] = self.dados[i]
+                    novo_tamanho += 1
+            self.tamanho = novo_tamanho
 
     def exportar_para_lista_simples(self) -> 'ListaSimples':
         """Cria e retorna uma ListaSimples com os dados válidos do vetor."""
-        pass
+        lista_simples = ListaSimples()
+        for i in range(self.tamanho):
+            lista_simples.append(self.dados[i])
+        return lista_simples
 
     def imprimir(self):
         print("Vetor:", [self.dados[i] for i in range(self.tamanho)])
@@ -49,17 +60,39 @@ class ListaSimples:
     def __init__(self):
         self.cabeca = None
 
+    def append(self, valor):
+        self.inserir_fim(valor)
+
     def inserir_fim(self, valor):
         """Insere um novo nó no final da lista simples."""
-        pass
+        novo = NodeSimples(valor)
+        if self.cabeca is None:
+            self.cabeca = novo
+            return
+        atual = self.cabeca
+        while atual.proximo is not None:
+            atual = atual.proximo
+        atual.proximo = novo
 
     def inverter(self):
         """Inverte a ordem dos nós in-place (reorientando apenas ponteiros .proximo)."""
-        pass
+        anterior = None
+        atual = self.cabeca
+        while atual is not None:
+            proximo = atual.proximo
+            atual.proximo = anterior
+            anterior = atual
+            atual = proximo
+        self.cabeca = anterior
 
     def converter_para_dupla(self) -> 'ListaDupla':
         """Cria e retorna uma ListaDupla com os elementos desta lista."""
-        pass
+        lista_dupla = ListaDupla()
+        atual = self.cabeca
+        while atual is not None:
+            lista_dupla.inserir_fim(atual.dado)
+            atual = atual.proximo
+        return lista_dupla
 
     def imprimir(self):
         itens = []
@@ -82,14 +115,34 @@ class ListaDupla:
 
     def inserir_fim(self, valor):
         """Insere no fim amarrando .anterior, .proximo e atualizando self.cauda."""
-        pass
+        novo = NodeDuplo(valor)
+        if self.cabeca is None:
+            self.cabeca = novo
+            self.cauda = novo
+        else:
+            novo.anterior = self.cauda
+            self.cauda.proximo = novo
+            self.cauda = novo
+        self.tamanho += 1
 
     def split_metade(self):
         """
         Divide a lista ao meio.
         Retorna duas novas instâncias de ListaDupla: (metade1, metade2).
         """
-        pass
+        metade1 = ListaDupla()
+        metade2 = ListaDupla()
+        primeira_parte = self.tamanho // 2
+        atual = self.cabeca
+        i = 0
+        while atual is not None:
+            if i < primeira_parte:
+                metade1.inserir_fim(atual.dado)
+            else:
+                metade2.inserir_fim(atual.dado)
+            atual = atual.proximo
+            i += 1
+        return metade1, metade2
 
     def imprimir_frente(self):
         itens = []
@@ -122,7 +175,14 @@ class ListaCircular:
     @classmethod
     def criar_a_partir_de_dupla(cls, lista_dupla: ListaDupla) -> 'ListaCircular':
         """Recebe uma ListaDupla e fecha o anel (cauda <-> cabeca)."""
-        pass
+        circular = cls()
+        circular.cabeca = lista_dupla.cabeca
+        circular.cauda = lista_dupla.cauda
+        circular.tamanho = lista_dupla.tamanho
+        if circular.cabeca is not None:
+            circular.cauda.proximo = circular.cabeca
+            circular.cabeca.anterior = circular.cauda
+        return circular
 
     def girar_e_eliminar(self, passos: int) -> int:
         """
@@ -131,7 +191,28 @@ class ListaCircular:
         O próximo ciclo recomeça a partir do nó seguinte ao removido.
         Repete até restar apenas 1 nó e retorna o seu dado.
         """
-        pass
+        if self.tamanho == 0:
+            return None
+
+        atual = self.cabeca
+        while self.tamanho > 1:
+            for _ in range(passos - 1):
+                atual = atual.proximo
+
+            anterior_no = atual.anterior
+            proximo_no = atual.proximo
+            anterior_no.proximo = proximo_no
+            proximo_no.anterior = anterior_no
+
+            if atual is self.cabeca:
+                self.cabeca = proximo_no
+            if atual is self.cauda:
+                self.cauda = anterior_no
+
+            self.tamanho -= 1
+            atual = proximo_no
+
+        return atual.dado
 
     def imprimir_uma_volta(self):
         if self.cabeca is None:
