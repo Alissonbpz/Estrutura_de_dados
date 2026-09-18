@@ -80,9 +80,81 @@ class Node:
         self.proximo = None
 
 no1 = Node("locomotiva", 80.0)
-no2 = Node("Vagao de carga", 50.0)
+no2 = Node("Vagao carga", 50.0)
 no3 = Node("Vagao passageiros", 30.0)
 no4 = Node("vagao cauda", 10.0)
 
+no1.proximo = no2
+no2.proximo = no3
+no3.proximo = no4
+
+cabeca = no1
+
 def relatorio_trem(primeiro_no):
     atual = primeiro_no
+    vagoes = ""
+    quantidade = 0
+    peso_total = 0.0
+
+    while atual is not None:
+        vagoes+= f"[ {atual.nome} ({atual.peso}t) ] -> "
+        quantidade += 1
+        peso_total += atual.peso
+        atual = atual.proximo
+
+    vagoes+="FIM"
+    print(vagoes)
+    print(f"Quantidade de vagões: {quantidade}")
+    print(f"Peso total da composição: {peso_total}t")
+    print("-" * 60)
+    
+relatorio_trem(cabeca)
+
+no5 = Node("Vagao restaurante", 25.0)
+
+cabeca.proximo = no2
+no2.proximo = no3
+no3.proximo = no5
+no5.proximo = no4
+
+relatorio_trem(cabeca)
+
+def desengatar_vagao(primeiro_no, nome_alvo):
+    anterior = None
+    atual = primeiro_no
+
+    while atual is not None:
+        if atual.nome == nome_alvo:
+            if anterior == None:
+                nova_cabeca = atual.proximo
+                atual.proximo = None
+                return nova_cabeca
+            else:
+                anterior.proximo = atual.proximo
+                atual.proximo = None
+                return primeiro_no
+        anterior = atual
+        atual = atual.proximo
+    return primeiro_no
+
+cabeca = desengatar_vagao(cabeca, "Vagao carga")
+
+relatorio_trem(cabeca)
+
+def inverter_trem(primeiro_no):
+    atual = primeiro_no
+    anterior = None
+
+    while atual is not None:
+        proximo = atual.proximo
+        atual.proximo = anterior
+        anterior = atual
+        atual = proximo
+
+    return anterior
+
+cabeca = inverter_trem(cabeca)
+
+relatorio_trem(cabeca)
+
+
