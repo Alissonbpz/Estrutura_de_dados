@@ -1,7 +1,7 @@
 # =====================================================================
 # 3. TESTES DE VERIFICAÇÃO
 # =====================================================================
-from main import ListaDuplamenteEncadeada
+from remakeex1 import ListaDuplamenteEncadeada
 
 
 if __name__ == "__main__":
